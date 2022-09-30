@@ -16,7 +16,10 @@ export default class King extends Piece {
         for(let y = currentSquare.row - 1; y <= currentSquare.row + 1; y++){
             for (let x: number = currentSquare.col - 1; x <= currentSquare.col + 1; x++){
                 if(Board.positionsExists(y,x) && (y != currentSquare.row || x != currentSquare.col)){
-                    moves.push(Square.at(y, x));
+                    let hitPiece: Piece | undefined = board.getPiece(Square.at(y,x));
+                    if(hitPiece === undefined || (hitPiece.player !== this.player && ! (hitPiece instanceof King))){
+                        moves.push(Square.at(y, x));
+                    }
                 }
             }
         }
