@@ -12,6 +12,16 @@ export default class Board {
         this.board = this.createBoard();
     }
 
+    public static positionsExists( row: number, col: number ): boolean {
+
+        if(row >= 0 && row < 8 && col >= 0 && col < 8){
+            return true;
+        }
+        return false;
+
+    }
+
+
     public setPiece(square: Square, piece: Piece | undefined) {
         this.board[square.row][square.col] = piece;
     }
