@@ -2,6 +2,7 @@ import Piece from './piece';
 import Player from '../player';
 import Board from '../board';
 import Square from "../square";
+import King from "./king";
 
 export default class Knight extends Piece {
     public constructor(player: Player) {
@@ -26,7 +27,10 @@ export default class Knight extends Piece {
 
         for(let i = 0; i < availableSquares.length; i++){
             if(Board.positionsExists(availableSquares[i].row, availableSquares[i].col)){
-                moves.push(availableSquares[i]);
+                let hitPiece: Piece | undefined = board.getPiece(availableSquares[i]);
+                if(hitPiece === undefined || (hitPiece.player !== this.player && ! (hitPiece instanceof King))){
+                    moves.push(availableSquares[i]);
+                }
             }
         }
 
