@@ -13,12 +13,37 @@ export default class Rook extends Piece {
 
         let currentSquare: Square = board.findPiece(this);
 
-        for(let i = 0; i < 8; i++){
-            if(i != currentSquare.row){
-                moves.push(Square.at(i, currentSquare.col));
+        if(currentSquare.col < 7) {
+            for (let x = currentSquare.col + 1; x < 8; x++) {
+                if (board.getPiece(Square.at(currentSquare.row, x)) !== undefined) {
+                    break;
+                }
+                moves.push(Square.at(currentSquare.row, x));
             }
-            if(i != currentSquare.col) {
-                moves.push(Square.at(currentSquare.row, i));
+        }
+        if(currentSquare.col > 0) {
+            for (let x = currentSquare.col - 1; x >= 0; x--) {
+                if (board.getPiece(Square.at(currentSquare.row, x)) !== undefined) {
+                    break;
+                }
+                moves.push(Square.at(currentSquare.row, x));
+            }
+        }
+
+        if(currentSquare.row < 7) {
+            for (let y = currentSquare.row + 1; y < 8; y++) {
+                if (board.getPiece(Square.at(y, currentSquare.col)) !== undefined) {
+                    break;
+                }
+                moves.push(Square.at(y, currentSquare.col));
+            }
+        }
+        if(currentSquare.row > 0) {
+            for (let y = currentSquare.row - 1; y >= 0; y--) {
+                if (board.getPiece(Square.at(y, currentSquare.col)) !== undefined) {
+                    break;
+                }
+                moves.push(Square.at(y, currentSquare.col));
             }
         }
 
