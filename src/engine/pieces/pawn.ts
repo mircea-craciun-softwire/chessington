@@ -15,6 +15,7 @@ export default class Pawn extends Piece {
         let currentSquare: Square = board.findPiece(this);
 
         if(this.player === Player.WHITE) {
+            if(currentSquare.row == 7)return moves;
 
             if(board.getPiece(Square.at(currentSquare.row + 1, currentSquare.col)) === undefined) {
                 moves.push(Square.at(currentSquare.row + 1, currentSquare.col));
@@ -26,8 +27,7 @@ export default class Pawn extends Piece {
             }
 
         }else {
-
-
+            if(currentSquare.row == 0)return moves;
             if(board.getPiece(Square.at(currentSquare.row - 1, currentSquare.col)) === undefined) {
                 moves.push(Square.at(currentSquare.row - 1, currentSquare.col));
                 if(currentSquare.row === 6){
