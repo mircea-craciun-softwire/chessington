@@ -4,6 +4,8 @@ import Player from '../../../src/engine/player';
 import Square from '../../../src/engine/square';
 import Rook from '../../../src/engine/pieces/rook';
 import King from '../../../src/engine/pieces/king';
+import Piece from "../../../src/engine/pieces/piece";
+import Queen from "../../../src/engine/pieces/queen";
 
 describe('Pawn', () => {
 
@@ -82,6 +84,23 @@ describe('Pawn', () => {
             const moves = pawn.getAvailableMoves(board);
 
             moves.should.not.deep.include(Square.at(5, 3));
+        });
+
+        it("Can promote to a queen", ()=> {
+            const pawn = new Pawn(Player.WHITE);
+            board.setPiece(Square.at(6, 2), pawn);
+
+            pawn.moveTo(board, Square.at(7, 2));
+
+            const newPiece: Piece | undefined = board.getPiece(Square.at(7, 2));
+
+            const validPieces: Piece[] = [];
+            if(newPiece instanceof Queen){
+                validPieces.push(newPiece);
+            }
+
+            validPieces.should.have.length(1);
+
         });
     });
 

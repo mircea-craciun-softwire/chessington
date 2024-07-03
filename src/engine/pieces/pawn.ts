@@ -4,10 +4,22 @@ import player from '../player';
 import Board from '../board';
 import Square from "../square";
 import King from "./king";
+import Queen from "./queen";
 
 export default class Pawn extends Piece {
     public constructor(player: Player) {
         super(player);
+    }
+
+    public moveTo(board: Board, newSquare: Square) {
+        const currentSquare = board.findPiece(this);
+        if((newSquare.row === 7 && this.player === Player.WHITE) || (newSquare.row === 0 && this.player === Player.BLACK)){
+            board.setPiece(currentSquare, undefined);
+            let newQueen : Queen = new Queen(this.player);
+            board.setPiece(newSquare, newQueen);
+        }else {
+            board.movePiece(currentSquare, newSquare);
+        }
     }
 
     public getAvailableMoves(board: Board) {
