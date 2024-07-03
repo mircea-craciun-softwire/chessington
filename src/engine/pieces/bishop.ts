@@ -11,24 +11,22 @@ export default class Bishop extends Piece {
     public getAvailableMoves(board: Board) {
         let moves: Square[] = new Array(0);
 
-        let currentSquare: Square = board.findPiece(this);
-
-        for(let i = 0; i < 8;i ++){
-            let difference: number = Math.abs(currentSquare.col - i);
-
-            if(difference === 0)continue;
-
-            let yPositionUp: number = currentSquare.row + difference;
-            let yPositionDown: number = currentSquare.row - difference;
-
-            if(yPositionUp < 8) {
-                moves.push(Square.at(yPositionUp, i))
-            }
-            if(yPositionDown >= 0) {
-                moves.push(Square.at(yPositionDown, i))
-            }
-        }
+        this.checkInDirection(moves, board,1,1);
+        this.checkInDirection(moves, board, -1,1);
+        this.checkInDirection(moves, board, 1,-1);
+        this.checkInDirection(moves, board, -1,-1);
 
         return moves;
+    }
+    private checkInDirection(moves: Square[], board: Board, xDir: number, yDir: number): void{
+        let currentSquare: Square = board.findPiece(this);
+
+        let x: number = currentSquare.col + xDir;
+        let y: number = currentSquare.row + yDir;
+        while( Board.positionsExists(y,x) && board.getPiece(Square.at(y,x)) === undefined ){
+            moves.push(Square.at(y,x));
+            x+= xDir;
+            y+= yDir;
+        }
     }
 }
