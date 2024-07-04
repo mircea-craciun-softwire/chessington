@@ -8,6 +8,28 @@ describe('King', () => {
     let board: Board;
     beforeEach(() => board = new Board());
 
+    describe("white King", () =>{
+        it("can short castle",() => {
+
+
+        });
+        it("can long castle",() => {
+
+
+        });
+    });
+    describe("black King", () =>{
+        it("can short castle",() => {
+
+
+        });
+        it("can long castle",() => {
+
+
+        });
+    });
+
+
     it('can move to adjacent squares', () => {
         const king = new King(Player.WHITE);
         board.setPiece(Square.at(3, 4), king);

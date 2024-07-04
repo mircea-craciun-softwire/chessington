@@ -1,6 +1,5 @@
 import Piece from './piece';
 import Player from '../player';
-import player from '../player';
 import Board from '../board';
 import Square from "../square";
 import King from "./king";

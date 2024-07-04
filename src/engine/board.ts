@@ -7,11 +7,10 @@ export default class Board {
     public currentPlayer: Player;
     private readonly board: (Piece | undefined)[][];
 
-    private lastMove:{from: Square, to: Square};
+    private moveHistory:{from: Square, to: Square}[] = [];
 
     public constructor(currentPlayer?: Player) {
         this.currentPlayer = currentPlayer ? currentPlayer : Player.WHITE;
-        this.lastMove = {from: Square.at(0,0), to: Square.at(0,0)}
         this.board = this.createBoard();
     }
 
@@ -47,7 +46,7 @@ export default class Board {
         const movingPiece = this.getPiece(fromSquare);        
         if (!!movingPiece && movingPiece.player === this.currentPlayer) {
 
-            this.lastMove = {from: fromSquare, to: toSquare};
+            this.moveHistory.push({from: fromSquare, to: toSquare});
 
             this.setPiece(toSquare, movingPiece);
             this.setPiece(fromSquare, undefined);
@@ -56,7 +55,21 @@ export default class Board {
     }
 
     public getLastMove(): {from: Square, to:Square}{
-        return this.lastMove;
+        if(this.moveHistory.length > 0){
+            return this.moveHistory[this.moveHistory.length - 1];
+        }else {
+            return {from: Square.at(-1,-1), to: Square.at(-1, -1)};
+        }
+    }
+
+    public pieceAtPositionHasMoved(row: number, col: number): boolean{
+        let hasMoved : boolean = false;
+        for (let i: number = 0; i < this.moveHistory.length; i++) {
+            if (this.moveHistory[i].from.row === row && this.moveHistory[i].from.col === col) {
+                hasMoved = true;
+            }
+        }
+        return hasMoved;
     }
 
     private createBoard() {
@@ -66,4 +79,5 @@ export default class Board {
         }
         return board;
     }
+
 }

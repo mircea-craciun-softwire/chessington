@@ -10,9 +10,9 @@ export default class MovementCalculator {
 
         let x: number = currentSquare.col + xDir;
         let y: number = currentSquare.row + yDir;
+
         while (Board.positionsExists(y, x)) {
-            let hitPiece: Piece | undefined;
-            hitPiece = board.getPiece(Square.at(y, x));
+            const hitPiece: Piece | undefined = board.getPiece(Square.at(y, x));
 
             if (hitPiece !== undefined) {
 
