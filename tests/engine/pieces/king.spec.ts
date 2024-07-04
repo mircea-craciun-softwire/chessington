@@ -10,10 +10,15 @@ describe('King', () => {
     beforeEach(() => board = new Board());
 
     describe("white King", () =>{
-        it("can castle",() => {
-            const king = new King(Player.WHITE);
-            const rookLeft : Rook= new Rook(Player.WHITE);
-            const rookRight : Rook= new Rook(Player.WHITE);
+        describe("Castling: ",()=>{
+            let king : King;
+            let rookLeft: Rook;
+            let rookRight: Rook;
+
+            beforeEach(()=>{
+            king = new King(Player.WHITE);
+            rookLeft = new Rook(Player.WHITE);
+            rookRight = new Rook(Player.WHITE);
 
             board.setPiece(Square.at(0, 4), king);
             board.setPiece(Square.at(0,0), rookLeft);
@@ -23,11 +28,31 @@ describe('King', () => {
             board.setPiece(Square.at(0,3), undefined);
             board.setPiece(Square.at(0,5), undefined);
             board.setPiece(Square.at(0,6), undefined);
+            });
 
-            const moves = king.getAvailableMoves(board);
 
-            moves.should.deep.include.members([Square.at(0,2),Square.at(0,6)]);
+            it("can move to castle position",() => {
+                const moves = king.getAvailableMoves(board);
+
+                moves.should.deep.include.members([Square.at(0,2),Square.at(0,6)]);
+            });
+
+            it("can swap positions with the rook in long castle",() => {
+                const moves = king.getAvailableMoves(board);
+                board.currentPlayer = Player.WHITE;
+
+                king.moveTo(board, Square.at(0,2));
+
+                const validSquares: Square[] = [];
+                if(board.getPiece(Square.at(0,2)) instanceof King && board.getPiece(Square.at(0,3)) instanceof Rook){
+                    validSquares.push(Square.at(0,0));
+                }
+
+                validSquares.should.have.length(1);
+            });
+
         });
+
     });
     describe("black King", () =>{
         it("can castle",() => {

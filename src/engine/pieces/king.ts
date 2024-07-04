@@ -8,6 +8,25 @@ export default class King extends Piece {
         super(player);
     }
 
+    public moveTo(board: Board, newSquare: Square) {
+        const currentSquare: Square = board.findPiece(this);
+        if(this.isCastling(newSquare, currentSquare)){
+            if(newSquare.col < currentSquare.col){
+                //castle left (long)
+                board.movePiece(Square.at(currentSquare.row, 0), Square.at(currentSquare.row, 3));
+            }else{
+                //castle right (short)
+                board.movePiece(Square.at(currentSquare.row, 7), Square.at(currentSquare.row, 5));
+            }
+        }
+        board.currentPlayer = this.player;
+        super.moveTo(board, newSquare);
+    }
+
+    private isCastling(newSquare: Square, currentSquare: Square) {
+        return Math.abs(newSquare.col - currentSquare.col) > 1;
+    }
+
     public getAvailableMoves(board: Board) {
         let moves: Square[] = new Array(0);
 
@@ -36,7 +55,6 @@ export default class King extends Piece {
 
         return moves;
     }
-
 
     private checkCastle(board: Board, moves: Square[], rookCol: number, newCol: number, row: number) {
         const startClearArea: number = rookCol === 0?1:5;
