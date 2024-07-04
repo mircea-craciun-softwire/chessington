@@ -3,29 +3,50 @@ import Board from '../../../src/engine/board';
 import Player from '../../../src/engine/player';
 import Square from '../../../src/engine/square';
 import Pawn from '../../../src/engine/pieces/pawn';
+import Rook from "../../../src/engine/pieces/rook";
 
 describe('King', () => {
     let board: Board;
     beforeEach(() => board = new Board());
 
     describe("white King", () =>{
-        it("can short castle",() => {
+        it("can castle",() => {
+            const king = new King(Player.WHITE);
+            const rookLeft : Rook= new Rook(Player.WHITE);
+            const rookRight : Rook= new Rook(Player.WHITE);
 
+            board.setPiece(Square.at(0, 4), king);
+            board.setPiece(Square.at(0,0), rookLeft);
+            board.setPiece(Square.at(0,7), rookRight);
+            board.setPiece(Square.at(0,1), undefined);
+            board.setPiece(Square.at(0,2), undefined);
+            board.setPiece(Square.at(0,3), undefined);
+            board.setPiece(Square.at(0,5), undefined);
+            board.setPiece(Square.at(0,6), undefined);
 
-        });
-        it("can long castle",() => {
+            const moves = king.getAvailableMoves(board);
 
-
+            moves.should.deep.include.members([Square.at(0,2),Square.at(0,6)]);
         });
     });
     describe("black King", () =>{
-        it("can short castle",() => {
+        it("can castle",() => {
+            const king = new King(Player.BLACK);
+            const rookLeft : Rook= new Rook(Player.BLACK);
+            const rookRight : Rook= new Rook(Player.BLACK);
 
+            board.setPiece(Square.at(7, 4), king);
+            board.setPiece(Square.at(7,0), rookLeft);
+            board.setPiece(Square.at(7,7), rookRight);
+            board.setPiece(Square.at(7,1), undefined);
+            board.setPiece(Square.at(7,2), undefined);
+            board.setPiece(Square.at(7,3), undefined);
+            board.setPiece(Square.at(7,5), undefined);
+            board.setPiece(Square.at(7,6), undefined);
 
-        });
-        it("can long castle",() => {
+            const moves = king.getAvailableMoves(board);
 
-
+            moves.should.deep.include.members([Square.at(7,2),Square.at(7,6)]);
         });
     });
 
