@@ -5,6 +5,7 @@ import Square from "../square";
 import King from "./king";
 import Queen from "./queen";
 import MovementCalculator from "../movementCalculator";
+import Helper from "../helper/helper";
 
 export default class Pawn extends Piece {
     public constructor(player: Player) {
@@ -34,7 +35,12 @@ export default class Pawn extends Piece {
         } else {
             this.checkMove(board, moves, -1);
         }
-        return moves;
+
+        if(board.checkedPlayer === this.player){
+            return Helper.squaresArrayIntersection(moves, board.lastPlayerAreaOfControl);
+        }else {
+            return moves;
+        }
     }
 
     public getAreaOfControl(board: Board): Square[] {

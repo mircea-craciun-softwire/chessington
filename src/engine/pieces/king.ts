@@ -2,6 +2,7 @@ import Piece from './piece';
 import Player from '../player';
 import Board from '../board';
 import Square from "../square";
+import Helper from "../helper/helper";
 
 export default class King extends Piece {
     public constructor(player: Player) {
@@ -27,6 +28,10 @@ export default class King extends Piece {
         return Math.abs(newSquare.col - currentSquare.col) > 1;
     }
 
+    public getAreaOfControl(board: Board): Square[] {
+        return this.getAvailableMoves(board);
+    }
+
     public getAvailableMoves(board: Board) {
         let moves: Square[] = new Array(0);
 
@@ -45,15 +50,20 @@ export default class King extends Piece {
 
         const kingStartRow = this.player === Player.WHITE ? 0 : 7;
         const kingStartCol = 4;
+        this.addValidCastlingMoves(board, kingStartRow, kingStartCol, currentSquare, moves);
+
+        return Helper.squaresArrayDifference(moves, board.lastPlayerAreaOfControl);
+
+    }
+
+    private addValidCastlingMoves(board: Board, kingStartRow: number, kingStartCol: number, currentSquare: Square, moves: Square[]) {
         if (board.pieceAtPositionHasMoved(kingStartRow, kingStartCol) || currentSquare.row !== kingStartRow || currentSquare.col !== kingStartCol) {
-            return moves;
+            return;
         }
         //long castle
         this.checkCastle(board, moves, 0, 2, kingStartRow);
         //short castle
         this.checkCastle(board, moves, 7, 6, kingStartRow);
-
-        return moves;
     }
 
     private checkCastle(board: Board, moves: Square[], rookCol: number, newCol: number, row: number) {

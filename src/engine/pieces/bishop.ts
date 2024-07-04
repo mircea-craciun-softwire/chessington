@@ -3,10 +3,22 @@ import Player from '../player';
 import Board from '../board';
 import Square from "../square";
 import MovementCalculator from "../movementCalculator";
+import Helper from "../helper/helper";
 
 export default class Bishop extends Piece {
     public constructor(player: Player) {
         super(player);
+    }
+
+    public getAreaOfControl(board: Board): Square[] {
+        let moves: Square[] = new Array(0);
+
+        MovementCalculator.checkInDirection(this, moves, board, 1, 1, false);
+        MovementCalculator.checkInDirection(this, moves, board, -1, 1, false);
+        MovementCalculator.checkInDirection(this, moves, board, 1, -1, false);
+        MovementCalculator.checkInDirection(this, moves, board, -1, -1, false);
+
+        return moves;
     }
 
     public getAvailableMoves(board: Board) {
@@ -17,7 +29,11 @@ export default class Bishop extends Piece {
         MovementCalculator.checkInDirection(this, moves, board, 1, -1);
         MovementCalculator.checkInDirection(this, moves, board, -1, -1);
 
-        return moves;
+        if(board.checkedPlayer === this.player){
+            return Helper.squaresArrayIntersection(moves, board.lastPlayerAreaOfControl);
+        }else {
+            return moves;
+        }
     }
 
 }

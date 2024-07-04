@@ -5,7 +5,7 @@ import King from "./pieces/king";
 
 export default class MovementCalculator {
 
-    public static checkInDirection(piece: Piece, moves: Square[], board: Board, xDir: number, yDir: number): void {
+    public static checkInDirection(piece: Piece, moves: Square[], board: Board, xDir: number, yDir: number, excludeKing: boolean = true): void {
         let currentSquare: Square = board.findPiece(piece);
 
         let x: number = currentSquare.col + xDir;
@@ -18,11 +18,13 @@ export default class MovementCalculator {
                 if (hitPiece.player === piece.player){
                     break;
                 }
-                if (hitPiece instanceof King){
-                    break;
+                if(hitPiece instanceof King){
+                    if(excludeKing){
+                        break;
+                    }else{
+                        moves.push(Square.at(y, x));
+                    }
                 }
-                moves.push(Square.at(y, x));
-                break;
             }
 
             moves.push(Square.at(y, x));

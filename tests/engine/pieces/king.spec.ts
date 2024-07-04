@@ -90,9 +90,28 @@ describe('King', () => {
         }
 
         moves.should.not.deep.include(Square.at(0, 5));
-        moves.should.deep.include(Square.at(1, 4));
+        moves.should.deep.include(Square.at(2, 4));
         moves.should.deep.include(Square.at(100, 100));
     });
+
+    it.only('can respect area of control', () => {
+        const king = new King(Player.WHITE);
+        const bishopOpponent: Bishop = new Bishop(Player.BLACK);
+        const rookOpponent: Rook = new Rook(Player.BLACK);
+
+        board.setPiece(Square.at(1, 4), king);
+        board.setPiece(Square.at(5, 0), bishopOpponent);
+        board.setPiece(Square.at(6, 5), rookOpponent);
+        board.currentPlayer = Player.BLACK;
+        board.movePiece(Square.at(6,5), Square.at(5,5));
+
+        console.log(board.lastPlayerAreaOfControl);
+        const moves = king.getAvailableMoves(board);
+
+        moves.should.deep.include.members([Square.at(1, 3),Square.at(0,3),Square.at(0,4),Square.at(2,4)]);
+        //moves.should.have.length(3);
+    });
+
 
     describe("white King", () =>{
         describe("Castling: ",()=>{

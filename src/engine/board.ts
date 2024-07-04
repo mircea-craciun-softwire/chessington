@@ -99,9 +99,12 @@ export default class Board {
             for (let col = 0; col < this.board[row].length; col++) {
                 const foundPiece = this.board[row][col];
 
-                if (foundPiece !== undefined && (foundPiece instanceof Rook || foundPiece instanceof Bishop || foundPiece instanceof Knight || foundPiece instanceof Pawn || foundPiece instanceof Queen || foundPiece instanceof King) && foundPiece.player === this.currentPlayer) {
-                    const availableMoves: Square[] = foundPiece.getAvailableMoves(this);
-                    this.lastPlayerAreaOfControl.concat(availableMoves);
+                if (foundPiece !== undefined && foundPiece.player === this.currentPlayer) {
+                    const availableMoves: Square[] = foundPiece.getAreaOfControl(this);
+
+                    for (let i = 0; i < availableMoves.length; i++){
+                        this.lastPlayerAreaOfControl.push(availableMoves[i]);
+                    }
                 }
             }
         }
