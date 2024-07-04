@@ -2,15 +2,26 @@ import Player from './player';
 import GameSettings from './gameSettings';
 import Square from './square';
 import Piece from './pieces/piece';
+import Rook from "./pieces/rook";
+import Bishop from "./pieces/bishop";
+import King from "./pieces/king";
+import Knight from "./pieces/knight";
+import Pawn from "./pieces/pawn";
+import Queen from "./pieces/queen";
+
 
 export default class Board {
     public currentPlayer: Player;
     private readonly board: (Piece | undefined)[][];
-
     private moveHistory: { from: Square, to: Square }[] = [];
+
+    public lastPlayerAreaOfControl: Square[];
+    public checkedPlayer: Player | undefined;
 
     public constructor(currentPlayer?: Player) {
         this.currentPlayer = currentPlayer ? currentPlayer : Player.WHITE;
+        this.lastPlayerAreaOfControl = [];
+        this.checkedPlayer = undefined;
         this.board = this.createBoard();
     }
 
@@ -45,11 +56,13 @@ export default class Board {
     public movePiece(fromSquare: Square, toSquare: Square) {
         const movingPiece = this.getPiece(fromSquare);
         if (!!movingPiece && movingPiece.player === this.currentPlayer) {
-
             this.moveHistory.push({from: fromSquare, to: toSquare});
 
             this.setPiece(toSquare, movingPiece);
             this.setPiece(fromSquare, undefined);
+
+            //this must always be done before switching the player
+            this.recalculateLastPlayerAreaOfControl();
             this.currentPlayer = (this.currentPlayer === Player.WHITE ? Player.BLACK : Player.WHITE);
         }
     }
@@ -80,4 +93,17 @@ export default class Board {
         return board;
     }
 
+    private recalculateLastPlayerAreaOfControl() {
+        this.lastPlayerAreaOfControl = [];
+        for (let row = 0; row < this.board.length; row++) {
+            for (let col = 0; col < this.board[row].length; col++) {
+                const foundPiece = this.board[row][col];
+
+                if (foundPiece !== undefined && (foundPiece instanceof Rook || foundPiece instanceof Bishop || foundPiece instanceof Knight || foundPiece instanceof Pawn || foundPiece instanceof Queen || foundPiece instanceof King) && foundPiece.player === this.currentPlayer) {
+                    const availableMoves: Square[] = foundPiece.getAvailableMoves(this);
+                    this.lastPlayerAreaOfControl.concat(availableMoves);
+                }
+            }
+        }
+    }
 }

@@ -4,6 +4,7 @@ import Board from '../board';
 import Square from "../square";
 import King from "./king";
 import Queen from "./queen";
+import MovementCalculator from "../movementCalculator";
 
 export default class Pawn extends Piece {
     public constructor(player: Player) {
@@ -34,8 +35,26 @@ export default class Pawn extends Piece {
             this.checkMove(board, moves, -1);
         }
         return moves;
-
     }
+
+    public getAreaOfControl(board: Board): Square[] {
+        const moves: Square[] = [];
+
+        const direction: number = this.player === Player.WHITE? 1 : -1;
+        const currentSquare: Square = board.findPiece(this);
+
+        const leftSquare = Square.at(currentSquare.row + direction, currentSquare.col - 1);
+        const rightSquare = Square.at(currentSquare.row + direction, currentSquare.col + 1);
+
+        if(MovementCalculator.isUnoccupiedValidSquare(board, leftSquare)){
+            moves.push(leftSquare);
+        }
+        if(MovementCalculator.isUnoccupiedValidSquare(board, rightSquare)){
+            moves.push(rightSquare);
+        }
+
+        return moves;
+    };
 
 
     private isOnFinalRow(newSquare: Square) {

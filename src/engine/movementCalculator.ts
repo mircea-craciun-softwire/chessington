@@ -30,4 +30,8 @@ export default class MovementCalculator {
             y += yDir;
         }
     }
+
+    public static isUnoccupiedValidSquare(board: Board, square: Square){
+        return (Board.positionsExists(square.row, square.col) && board.getPiece(square) === undefined);
+    }
 }
