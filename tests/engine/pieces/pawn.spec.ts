@@ -140,7 +140,7 @@ describe('Pawn', () => {
             board.currentPlayer = Player.BLACK;
 
             opposingPawn.moveTo(board, Square.at(4,3));
-            let moves: Square[] = pawn.getAvailableMoves(board);
+            pawn.moveTo(board, Square.at(3,3));
 
             let capturedPiece: Piece | undefined = board.getPiece(Square.at(4,3));
 
@@ -260,13 +260,15 @@ describe('Pawn', () => {
         });
         it("can capture the opposing pawn when doing En Passant", () =>{
             const pawn : Pawn = new Pawn(Player.BLACK);
-            const opposingPawn: Queen = new Queen(Player.WHITE);
+            const opposingPawn: Rook = new Rook(Player.WHITE);
 
             board.setPiece(Square.at(3, 4), pawn);
             board.setPiece(Square.at(1, 3), opposingPawn);
+
             board.currentPlayer = Player.WHITE;
 
             opposingPawn.moveTo(board, Square.at(3,3));
+            pawn.moveTo(board, Square.at(2,3));
 
             let capturedPiece: Piece | undefined = board.getPiece(Square.at(3,3));
 

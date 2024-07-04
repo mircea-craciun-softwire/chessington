@@ -16,7 +16,7 @@ export default class Pawn extends Piece {
 
     public moveTo(board: Board, newSquare: Square) {
         const currentSquare = board.findPiece(this);
-        if((newSquare.row === this.FINAL_ROW_WHITE && this.player === Player.WHITE) || (newSquare.row === this.FINAL_ROW_BLACK && this.player === Player.BLACK)){
+        if(this.isOnFinalRow(newSquare)){
             this.promoteToQueen(board, currentSquare, newSquare);
         }else {
             if(this.isMovingEnPassant(newSquare, currentSquare, board)){
@@ -24,20 +24,6 @@ export default class Pawn extends Piece {
             }
             board.movePiece(currentSquare, newSquare);
         }
-    }
-
-    private captureOppPawnThroughEnPassant(board: Board, currentSquare: Square, newSquare: Square) {
-        board.setPiece(Square.at(currentSquare.row, newSquare.col), undefined);
-    }
-
-    private isMovingEnPassant(newSquare: Square, currentSquare: Square, board: Board) {
-        return newSquare.col !== currentSquare.col && board.getPiece(newSquare) === undefined;
-    }
-
-    private promoteToQueen(board: Board, currentSquare: Square, newSquare: Square) {
-        board.setPiece(currentSquare, undefined);
-        let newQueen: Queen = new Queen(this.player);
-        board.setPiece(newSquare, newQueen);
     }
 
     public getAvailableMoves(board: Board) {
@@ -53,7 +39,26 @@ export default class Pawn extends Piece {
 
     }
 
-    checkMove(board: Board,moves: Square[],  direction: number) : void{
+
+    private isOnFinalRow(newSquare: Square) {
+        return (newSquare.row === this.FINAL_ROW_WHITE && this.player === Player.WHITE) || (newSquare.row === this.FINAL_ROW_BLACK && this.player === Player.BLACK);
+    }
+
+    private captureOppPawnThroughEnPassant(board: Board, currentSquare: Square, newSquare: Square) {
+        board.setPiece(Square.at(currentSquare.row, newSquare.col), undefined);
+    }
+
+    private isMovingEnPassant(newSquare: Square, currentSquare: Square, board: Board) {
+        return (newSquare.col !== currentSquare.col && board.getPiece(newSquare) === undefined);
+    }
+
+    private promoteToQueen(board: Board, currentSquare: Square, newSquare: Square) {
+        board.movePiece(currentSquare, newSquare);
+        let newQueen: Queen = new Queen(this.player);
+        board.setPiece(newSquare, newQueen);
+    }
+
+    private checkMove(board: Board,moves: Square[],  direction: number) : void{
 
         let finalRow: number = this.player === Player.WHITE? 7:0;
         let currentSquare: Square = board.findPiece(this);
@@ -76,12 +81,12 @@ export default class Pawn extends Piece {
             }
         }
 
-        this.checkAttack(board, moves, direction,1);
-        this.checkAttack(board, moves, direction,-1);
+        this.checkDiagonalAttack(board, moves, direction,1);
+        this.checkDiagonalAttack(board, moves, direction,-1);
 
     }
 
-    checkAttack(board: Board, moves: Square[], verticalDir: number, horizontalDir: number):void{
+    private checkDiagonalAttack(board: Board, moves: Square[], verticalDir: number, horizontalDir: number):void{
         let targetSquare: Square = Square.at(board.findPiece(this).row + verticalDir, board.findPiece(this).col + horizontalDir);
 
         if(!Board.positionsExists(targetSquare.row, targetSquare.col)) return;
