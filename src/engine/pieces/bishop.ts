@@ -2,7 +2,7 @@ import Piece from './piece';
 import Player from '../player';
 import Board from '../board';
 import Square from "../square";
-import King from "./king";
+import MovementCalculator from "../movementCalculator";
 
 export default class Bishop extends Piece {
     public constructor(player: Player) {
@@ -12,35 +12,12 @@ export default class Bishop extends Piece {
     public getAvailableMoves(board: Board) {
         let moves: Square[] = new Array(0);
 
-        this.checkInDirection(moves, board,1,1);
-        this.checkInDirection(moves, board, -1,1);
-        this.checkInDirection(moves, board, 1,-1);
-        this.checkInDirection(moves, board, -1,-1);
+        MovementCalculator.checkInDirection(this, moves, board,1,1);
+        MovementCalculator.checkInDirection(this, moves, board, -1,1);
+        MovementCalculator.checkInDirection(this, moves, board, 1,-1);
+        MovementCalculator.checkInDirection(this, moves, board, -1,-1);
 
         return moves;
     }
-    private checkInDirection(moves: Square[], board: Board, xDir: number, yDir: number): void{
-        let currentSquare: Square = board.findPiece(this);
 
-        let x: number = currentSquare.col + xDir;
-        let y: number = currentSquare.row + yDir;
-        while( Board.positionsExists(y,x)){
-            let hitPiece: Piece | undefined;
-            hitPiece = board.getPiece(Square.at(y,x));
-
-            if(hitPiece !== undefined ){
-
-                if(hitPiece.player === this.player)break;
-
-                if(hitPiece instanceof King) break;
-
-                moves.push(Square.at(y,x));
-                break;
-            }
-
-            moves.push(Square.at(y,x));
-            x+= xDir;
-            y+= yDir;
-        }
-    }
 }

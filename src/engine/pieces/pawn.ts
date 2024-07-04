@@ -65,10 +65,25 @@ export default class Pawn extends Piece {
 
     checkAttack(board: Board, moves: Square[], verticalDir: number, horizontalDir: number):void{
         let targetSquare: Square = Square.at(board.findPiece(this).row + verticalDir, board.findPiece(this).col + horizontalDir);
+
         if(!Board.positionsExists(targetSquare.row, targetSquare.col)) return;
+
         let hitPiece: Piece | undefined = board.getPiece(targetSquare);
+
+        //check en passant attack
+        if(hitPiece === undefined){
+            let lastMove: {from: Square, to:Square} = board.getLastMove();
+            let requiredLastMove: {from:Square, to:Square} = {from: Square.at(targetSquare.row + verticalDir, targetSquare.col), to: Square.at(targetSquare.row - verticalDir, targetSquare.col)};
+
+            if(lastMove.from.row === requiredLastMove.from.row && lastMove.from.col === requiredLastMove.from.col && lastMove.to.row === requiredLastMove.to.row && lastMove.to.col === requiredLastMove.to.col)
+            {
+                moves.push(targetSquare);
+            }
+        }
+
         if(hitPiece !== undefined && hitPiece.player !== this.player && !(hitPiece instanceof King)){
             moves.push(targetSquare);
+            return;
         }
     }
 }

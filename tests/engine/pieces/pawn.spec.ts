@@ -102,6 +102,56 @@ describe('Pawn', () => {
             validPieces.should.have.length(1);
 
         });
+
+        it("can En Passant an opposing pawn", () =>{
+            const pawn : Pawn = new Pawn(Player.WHITE);
+            const opposingPawn: Pawn = new Pawn(Player.BLACK);
+
+            board.setPiece(Square.at(6, 3), opposingPawn);
+            board.setPiece(Square.at(4, 4), pawn);
+            board.currentPlayer = Player.BLACK;
+
+            opposingPawn.moveTo(board, Square.at(4,3));
+            let moves: Square[] = pawn.getAvailableMoves(board);
+
+            moves.should.deep.include(Square.at(5, 3));
+        });
+
+        it("cannot En Passant any other opposing piece", () =>{
+            const pawn : Pawn = new Pawn(Player.WHITE);
+            const opposingPawn: Rook = new Rook(Player.BLACK);
+
+            board.setPiece(Square.at(6, 3), opposingPawn);
+            board.setPiece(Square.at(4, 4), pawn);
+            board.currentPlayer = Player.BLACK;
+
+            opposingPawn.moveTo(board, Square.at(4,3));
+            let moves: Square[] = pawn.getAvailableMoves(board);
+
+            moves.should.not.deep.include(Square.at(5, 3));
+        });
+
+        it("can capture the opposing pawn when doing En Passant", () =>{
+            const pawn : Pawn = new Pawn(Player.WHITE);
+            const opposingPawn: Rook = new Rook(Player.BLACK);
+
+            board.setPiece(Square.at(6, 3), opposingPawn);
+            board.setPiece(Square.at(4, 4), pawn);
+            board.currentPlayer = Player.BLACK;
+
+            opposingPawn.moveTo(board, Square.at(4,3));
+            let moves: Square[] = pawn.getAvailableMoves(board);
+
+            let capturedPiece: Piece | undefined = board.getPiece(Square.at(4,3));
+
+            const invalidPieces: Piece[] = [];
+            if(capturedPiece !== undefined){
+                invalidPieces.push(capturedPiece);
+            }
+
+            invalidPieces.should.have.length(0);
+
+        });
     });
 
     describe('black pawns', () => {
@@ -179,6 +229,54 @@ describe('Pawn', () => {
             const moves = pawn.getAvailableMoves(board);
 
             moves.should.not.deep.include(Square.at(3, 3));
+        });
+
+        it("can En Passant an opposing pawn", () =>{
+            const pawn : Pawn = new Pawn(Player.BLACK);
+            const opposingPawn: Pawn = new Pawn(Player.WHITE);
+
+            board.setPiece(Square.at(3, 4), pawn);
+            board.setPiece(Square.at(1, 3), opposingPawn);
+            board.currentPlayer = Player.WHITE;
+
+            opposingPawn.moveTo(board, Square.at(3,3));
+            let moves: Square[] = pawn.getAvailableMoves(board);
+
+            moves.should.deep.include(Square.at(2, 3));
+        });
+
+        it("cannot En Passant any other opposing piece", () =>{
+            const pawn : Pawn = new Pawn(Player.BLACK);
+            const opposingPawn: Queen = new Queen(Player.WHITE);
+
+            board.setPiece(Square.at(3, 4), pawn);
+            board.setPiece(Square.at(1, 3), opposingPawn);
+            board.currentPlayer = Player.WHITE;
+
+            opposingPawn.moveTo(board, Square.at(3,3));
+            let moves: Square[] = pawn.getAvailableMoves(board);
+
+            moves.should.not.deep.include(Square.at(2, 3));
+        });
+        it("can capture the opposing pawn when doing En Passant", () =>{
+            const pawn : Pawn = new Pawn(Player.BLACK);
+            const opposingPawn: Queen = new Queen(Player.WHITE);
+
+            board.setPiece(Square.at(3, 4), pawn);
+            board.setPiece(Square.at(1, 3), opposingPawn);
+            board.currentPlayer = Player.WHITE;
+
+            opposingPawn.moveTo(board, Square.at(3,3));
+
+            let capturedPiece: Piece | undefined = board.getPiece(Square.at(3,3));
+
+            const invalidPieces: Piece[] = [];
+            if(capturedPiece !== undefined){
+                invalidPieces.push(capturedPiece);
+            }
+
+            invalidPieces.should.have.length(0);
+
         });
     });
 
