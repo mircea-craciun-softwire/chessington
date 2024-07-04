@@ -11,15 +11,33 @@ export default class Pawn extends Piece {
         super(player);
     }
 
+    private readonly FINAL_ROW_BLACK : number = 0;
+    private readonly FINAL_ROW_WHITE : number = 7;
+
     public moveTo(board: Board, newSquare: Square) {
         const currentSquare = board.findPiece(this);
-        if((newSquare.row === 7 && this.player === Player.WHITE) || (newSquare.row === 0 && this.player === Player.BLACK)){
-            board.setPiece(currentSquare, undefined);
-            let newQueen : Queen = new Queen(this.player);
-            board.setPiece(newSquare, newQueen);
+        if((newSquare.row === this.FINAL_ROW_WHITE && this.player === Player.WHITE) || (newSquare.row === this.FINAL_ROW_BLACK && this.player === Player.BLACK)){
+            this.promoteToQueen(board, currentSquare, newSquare);
         }else {
+            if(this.isMovingEnPassant(newSquare, currentSquare, board)){
+               this.captureOppPawnThroughEnPassant(board, currentSquare, newSquare);
+            }
             board.movePiece(currentSquare, newSquare);
         }
+    }
+
+    private captureOppPawnThroughEnPassant(board: Board, currentSquare: Square, newSquare: Square) {
+        board.setPiece(Square.at(currentSquare.row, newSquare.col), undefined);
+    }
+
+    private isMovingEnPassant(newSquare: Square, currentSquare: Square, board: Board) {
+        return newSquare.col !== currentSquare.col && board.getPiece(newSquare) === undefined;
+    }
+
+    private promoteToQueen(board: Board, currentSquare: Square, newSquare: Square) {
+        board.setPiece(currentSquare, undefined);
+        let newQueen: Queen = new Queen(this.player);
+        board.setPiece(newSquare, newQueen);
     }
 
     public getAvailableMoves(board: Board) {
@@ -77,7 +95,9 @@ export default class Pawn extends Piece {
 
             if(lastMove.from.row === requiredLastMove.from.row && lastMove.from.col === requiredLastMove.from.col && lastMove.to.row === requiredLastMove.to.row && lastMove.to.col === requiredLastMove.to.col)
             {
-                moves.push(targetSquare);
+                if(board.getPiece(requiredLastMove.to) instanceof Pawn) {
+                    moves.push(targetSquare);
+                }
             }
         }
 

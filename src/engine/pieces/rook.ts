@@ -2,7 +2,6 @@ import Piece from './piece';
 import Player from '../player';
 import Board from '../board';
 import Square from "../square";
-import King from "./king";
 import MovementCalculator from "../movementCalculator";
 
 export default class Rook extends Piece {
