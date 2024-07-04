@@ -10,11 +10,11 @@ export default class King extends Piece {
 
     public moveTo(board: Board, newSquare: Square) {
         const currentSquare: Square = board.findPiece(this);
-        if(this.isCastling(newSquare, currentSquare)){
-            if(newSquare.col < currentSquare.col){
+        if (this.isCastling(newSquare, currentSquare)) {
+            if (newSquare.col < currentSquare.col) {
                 //castle left (long)
                 board.movePiece(Square.at(currentSquare.row, 0), Square.at(currentSquare.row, 3));
-            }else{
+            } else {
                 //castle right (short)
                 board.movePiece(Square.at(currentSquare.row, 7), Square.at(currentSquare.row, 5));
             }
@@ -32,20 +32,20 @@ export default class King extends Piece {
 
         let currentSquare: Square = board.findPiece(this);
 
-        for (let y = currentSquare.row - 1; y <= currentSquare.row + 1; y++){
-            for (let x: number = currentSquare.col - 1; x <= currentSquare.col + 1; x++){
-                if (Board.positionsExists(y, x) && (y != currentSquare.row || x != currentSquare.col)){
+        for (let y = currentSquare.row - 1; y <= currentSquare.row + 1; y++) {
+            for (let x: number = currentSquare.col - 1; x <= currentSquare.col + 1; x++) {
+                if (Board.positionsExists(y, x) && (y != currentSquare.row || x != currentSquare.col)) {
                     const hitPiece: Piece | undefined = board.getPiece(Square.at(y, x));
-                    if (hitPiece === undefined || (hitPiece.player !== this.player && ! (hitPiece instanceof King))){
+                    if (hitPiece === undefined || (hitPiece.player !== this.player && !(hitPiece instanceof King))) {
                         moves.push(Square.at(y, x));
                     }
                 }
             }
         }
 
-        const kingStartRow = this.player === Player.WHITE?0:7;
+        const kingStartRow = this.player === Player.WHITE ? 0 : 7;
         const kingStartCol = 4;
-        if(board.pieceAtPositionHasMoved(kingStartRow,kingStartCol) || currentSquare.row !== kingStartRow || currentSquare.col !== kingStartCol){
+        if (board.pieceAtPositionHasMoved(kingStartRow, kingStartCol) || currentSquare.row !== kingStartRow || currentSquare.col !== kingStartCol) {
             return moves;
         }
         //long castle
@@ -57,8 +57,8 @@ export default class King extends Piece {
     }
 
     private checkCastle(board: Board, moves: Square[], rookCol: number, newCol: number, row: number) {
-        const startClearArea: number = rookCol === 0?1:5;
-        const endClearArea: number = rookCol === 0?3:6;
+        const startClearArea: number = rookCol === 0 ? 1 : 5;
+        const endClearArea: number = rookCol === 0 ? 3 : 6;
 
         if (board.pieceAtPositionHasMoved(row, rookCol)) {
             return;

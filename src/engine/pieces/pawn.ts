@@ -10,16 +10,16 @@ export default class Pawn extends Piece {
         super(player);
     }
 
-    private readonly FINAL_ROW_BLACK : number = 0;
-    private readonly FINAL_ROW_WHITE : number = 7;
+    private readonly FINAL_ROW_BLACK: number = 0;
+    private readonly FINAL_ROW_WHITE: number = 7;
 
     public moveTo(board: Board, newSquare: Square) {
         const currentSquare = board.findPiece(this);
-        if(this.isOnFinalRow(newSquare)){
+        if (this.isOnFinalRow(newSquare)) {
             this.promoteToQueen(board, currentSquare, newSquare);
-        }else {
-            if(this.isMovingEnPassant(newSquare, currentSquare, board)){
-               this.captureOppPawnThroughEnPassant(board, currentSquare, newSquare);
+        } else {
+            if (this.isMovingEnPassant(newSquare, currentSquare, board)) {
+                this.captureOppPawnThroughEnPassant(board, currentSquare, newSquare);
             }
             board.movePiece(currentSquare, newSquare);
         }
@@ -29,9 +29,9 @@ export default class Pawn extends Piece {
         let moves: Square[] = new Array(0);
 
 
-        if(this.player === Player.WHITE) {
+        if (this.player === Player.WHITE) {
             this.checkMove(board, moves, 1);
-        }else {
+        } else {
             this.checkMove(board, moves, -1);
         }
         return moves;
@@ -57,55 +57,60 @@ export default class Pawn extends Piece {
         board.setPiece(newSquare, newQueen);
     }
 
-    private checkMove(board: Board,moves: Square[],  direction: number) : void{
+    private checkMove(board: Board, moves: Square[], direction: number): void {
 
-        let finalRow: number = this.player === Player.WHITE? 7:0;
+        let finalRow: number = this.player === Player.WHITE ? 7 : 0;
         let currentSquare: Square = board.findPiece(this);
 
-        if(currentSquare.row === finalRow){
+        if (currentSquare.row === finalRow) {
             return;
         }
 
-        let startingRow: number = this.player === Player.WHITE? 1:6;
+        let startingRow: number = this.player === Player.WHITE ? 1 : 6;
 
         let nextSquare: Square = Square.at(currentSquare.row + direction, currentSquare.col);
 
-        if(board.getPiece(nextSquare) === undefined) {
+        if (board.getPiece(nextSquare) === undefined) {
             moves.push(Square.at(currentSquare.row + direction, currentSquare.col));
 
-            if(currentSquare.row === startingRow){
-                if(board.getPiece(Square.at(nextSquare.row + direction, nextSquare.col)) === undefined) {
+            if (currentSquare.row === startingRow) {
+                if (board.getPiece(Square.at(nextSquare.row + direction, nextSquare.col)) === undefined) {
                     moves.push(Square.at(nextSquare.row + direction, nextSquare.col));
                 }
             }
         }
 
-        this.checkDiagonalAttack(board, moves, direction,1);
-        this.checkDiagonalAttack(board, moves, direction,-1);
+        this.checkDiagonalAttack(board, moves, direction, 1);
+        this.checkDiagonalAttack(board, moves, direction, -1);
 
     }
 
-    private checkDiagonalAttack(board: Board, moves: Square[], verticalDir: number, horizontalDir: number):void{
+    private checkDiagonalAttack(board: Board, moves: Square[], verticalDir: number, horizontalDir: number): void {
         let targetSquare: Square = Square.at(board.findPiece(this).row + verticalDir, board.findPiece(this).col + horizontalDir);
 
-        if(!Board.positionsExists(targetSquare.row, targetSquare.col)) return;
+        if (!Board.positionsExists(targetSquare.row, targetSquare.col)) return;
 
         let hitPiece: Piece | undefined = board.getPiece(targetSquare);
 
         //check en passant attack
-        if(hitPiece === undefined){
-            let lastMove: {from: Square, to:Square} = board.getLastMove();
-            let requiredLastMove: {from:Square, to:Square} = {from: Square.at(targetSquare.row + verticalDir, targetSquare.col), to: Square.at(targetSquare.row - verticalDir, targetSquare.col)};
+        if (hitPiece === undefined) {
+            let lastMove: { from: Square, to: Square } = board.getLastMove();
+            let requiredLastMove: {
+                from: Square,
+                to: Square
+            } = {
+                from: Square.at(targetSquare.row + verticalDir, targetSquare.col),
+                to: Square.at(targetSquare.row - verticalDir, targetSquare.col)
+            };
 
-            if(lastMove.from.row === requiredLastMove.from.row && lastMove.from.col === requiredLastMove.from.col && lastMove.to.row === requiredLastMove.to.row && lastMove.to.col === requiredLastMove.to.col)
-            {
-                if(board.getPiece(requiredLastMove.to) instanceof Pawn) {
+            if (lastMove.from.row === requiredLastMove.from.row && lastMove.from.col === requiredLastMove.from.col && lastMove.to.row === requiredLastMove.to.row && lastMove.to.col === requiredLastMove.to.col) {
+                if (board.getPiece(requiredLastMove.to) instanceof Pawn) {
                     moves.push(targetSquare);
                 }
             }
         }
 
-        if(hitPiece !== undefined && hitPiece.player !== this.player && !(hitPiece instanceof King)){
+        if (hitPiece !== undefined && hitPiece.player !== this.player && !(hitPiece instanceof King)) {
             moves.push(targetSquare);
             return;
         }

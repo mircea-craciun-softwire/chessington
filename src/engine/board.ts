@@ -7,16 +7,16 @@ export default class Board {
     public currentPlayer: Player;
     private readonly board: (Piece | undefined)[][];
 
-    private moveHistory:{from: Square, to: Square}[] = [];
+    private moveHistory: { from: Square, to: Square }[] = [];
 
     public constructor(currentPlayer?: Player) {
         this.currentPlayer = currentPlayer ? currentPlayer : Player.WHITE;
         this.board = this.createBoard();
     }
 
-    public static positionsExists( row: number, col: number ): boolean {
+    public static positionsExists(row: number, col: number): boolean {
 
-        if(row >= 0 && row < 8 && col >= 0 && col < 8){
+        if (row >= 0 && row < 8 && col >= 0 && col < 8) {
             return true;
         }
         return false;
@@ -43,7 +43,7 @@ export default class Board {
     }
 
     public movePiece(fromSquare: Square, toSquare: Square) {
-        const movingPiece = this.getPiece(fromSquare);        
+        const movingPiece = this.getPiece(fromSquare);
         if (!!movingPiece && movingPiece.player === this.currentPlayer) {
 
             this.moveHistory.push({from: fromSquare, to: toSquare});
@@ -54,16 +54,16 @@ export default class Board {
         }
     }
 
-    public getLastMove(): {from: Square, to:Square}{
-        if(this.moveHistory.length > 0){
+    public getLastMove(): { from: Square, to: Square } {
+        if (this.moveHistory.length > 0) {
             return this.moveHistory[this.moveHistory.length - 1];
-        }else {
-            return {from: Square.at(-1,-1), to: Square.at(-1, -1)};
+        } else {
+            return {from: Square.at(-1, -1), to: Square.at(-1, -1)};
         }
     }
 
-    public pieceAtPositionHasMoved(row: number, col: number): boolean{
-        let hasMoved : boolean = false;
+    public pieceAtPositionHasMoved(row: number, col: number): boolean {
+        let hasMoved: boolean = false;
         for (let i: number = 0; i < this.moveHistory.length; i++) {
             if (this.moveHistory[i].from.row === row && this.moveHistory[i].from.col === col) {
                 hasMoved = true;

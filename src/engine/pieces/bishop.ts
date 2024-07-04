@@ -12,10 +12,10 @@ export default class Bishop extends Piece {
     public getAvailableMoves(board: Board) {
         let moves: Square[] = new Array(0);
 
-        MovementCalculator.checkInDirection(this, moves, board,1,1);
-        MovementCalculator.checkInDirection(this, moves, board, -1,1);
-        MovementCalculator.checkInDirection(this, moves, board, 1,-1);
-        MovementCalculator.checkInDirection(this, moves, board, -1,-1);
+        MovementCalculator.checkInDirection(this, moves, board, 1, 1);
+        MovementCalculator.checkInDirection(this, moves, board, -1, 1);
+        MovementCalculator.checkInDirection(this, moves, board, 1, -1);
+        MovementCalculator.checkInDirection(this, moves, board, -1, -1);
 
         return moves;
     }

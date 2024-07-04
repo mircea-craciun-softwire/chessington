@@ -16,9 +16,13 @@ export default class MovementCalculator {
 
             if (hitPiece !== undefined) {
 
-                if (hitPiece.player === piece.player) break;
+                if (hitPiece.player === piece.player){
+                    break;
+                }
 
-                if (hitPiece instanceof King) break;
+                if (hitPiece instanceof King){
+                    break;
+                }
 
                 moves.push(Square.at(y, x));
                 break;

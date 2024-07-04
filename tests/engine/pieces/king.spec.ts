@@ -55,24 +55,49 @@ describe('King', () => {
 
     });
     describe("black King", () =>{
-        it("can castle",() => {
-            const king = new King(Player.BLACK);
-            const rookLeft : Rook= new Rook(Player.BLACK);
-            const rookRight : Rook= new Rook(Player.BLACK);
+        describe("Castling: ",()=>{
+            let king : King;
+            let rookLeft: Rook;
+            let rookRight: Rook;
 
-            board.setPiece(Square.at(7, 4), king);
-            board.setPiece(Square.at(7,0), rookLeft);
-            board.setPiece(Square.at(7,7), rookRight);
-            board.setPiece(Square.at(7,1), undefined);
-            board.setPiece(Square.at(7,2), undefined);
-            board.setPiece(Square.at(7,3), undefined);
-            board.setPiece(Square.at(7,5), undefined);
-            board.setPiece(Square.at(7,6), undefined);
+            beforeEach(()=>{
+                king = new King(Player.BLACK);
+                rookLeft = new Rook(Player.BLACK);
+                rookRight = new Rook(Player.BLACK);
 
-            const moves = king.getAvailableMoves(board);
+                board.setPiece(Square.at(7, 4), king);
+                board.setPiece(Square.at(7,0), rookLeft);
+                board.setPiece(Square.at(7,7), rookRight);
+                board.setPiece(Square.at(7,1), undefined);
+                board.setPiece(Square.at(7,2), undefined);
+                board.setPiece(Square.at(7,3), undefined);
+                board.setPiece(Square.at(7,5), undefined);
+                board.setPiece(Square.at(7,6), undefined);
+            });
 
-            moves.should.deep.include.members([Square.at(7,2),Square.at(7,6)]);
+
+            it("can move to castle position",() => {
+                const moves = king.getAvailableMoves(board);
+
+                moves.should.deep.include.members([Square.at(7,2),Square.at(7,6)]);
+            });
+
+            it("can swap positions with the rook in long castle",() => {
+                const moves = king.getAvailableMoves(board);
+                board.currentPlayer = Player.BLACK;
+
+                king.moveTo(board, Square.at(7,2));
+
+                const validSquares: Square[] = [];
+                if(board.getPiece(Square.at(7,2)) instanceof King && board.getPiece(Square.at(7,3)) instanceof Rook){
+                    validSquares.push(Square.at(7,0));
+                }
+
+                validSquares.should.have.length(1);
+            });
+
         });
+
     });
 
 
