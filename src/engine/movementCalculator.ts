@@ -15,15 +15,12 @@ export default class MovementCalculator {
             const hitPiece: Piece | undefined = board.getPiece(Square.at(y, x));
 
             if (hitPiece !== undefined) {
-
                 if (hitPiece.player === piece.player){
                     break;
                 }
-
                 if (hitPiece instanceof King){
                     break;
                 }
-
                 moves.push(Square.at(y, x));
                 break;
             }

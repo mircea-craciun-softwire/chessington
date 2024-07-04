@@ -28,7 +28,6 @@ export default class Pawn extends Piece {
     public getAvailableMoves(board: Board) {
         let moves: Square[] = new Array(0);
 
-
         if (this.player === Player.WHITE) {
             this.checkMove(board, moves, 1);
         } else {
@@ -58,7 +57,6 @@ export default class Pawn extends Piece {
     }
 
     private checkMove(board: Board, moves: Square[], direction: number): void {
-
         let finalRow: number = this.player === Player.WHITE ? 7 : 0;
         let currentSquare: Square = board.findPiece(this);
 
@@ -88,7 +86,9 @@ export default class Pawn extends Piece {
     private checkDiagonalAttack(board: Board, moves: Square[], verticalDir: number, horizontalDir: number): void {
         let targetSquare: Square = Square.at(board.findPiece(this).row + verticalDir, board.findPiece(this).col + horizontalDir);
 
-        if (!Board.positionsExists(targetSquare.row, targetSquare.col)) return;
+        if (!Board.positionsExists(targetSquare.row, targetSquare.col)) {
+            return;
+        }
 
         let hitPiece: Piece | undefined = board.getPiece(targetSquare);
 
