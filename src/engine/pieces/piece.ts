@@ -9,7 +9,11 @@ export default class Piece {
         this.player = player;
     }
 
-    public getAvailableMoves(board: Board) {
+    public getAvailableMoves(board: Board): Square[] {
+        throw new Error('This method must be implemented, and return a list of available moves');
+    }
+
+    public getAreaOfControl(board: Board): Square[] {
         throw new Error('This method must be implemented, and return a list of available moves');
     }
 
